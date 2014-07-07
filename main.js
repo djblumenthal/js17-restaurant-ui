@@ -6,6 +6,9 @@ var FoodItem = function (name, calories, vegan, glutenFree, citrusFree){
 	this.vegan = vegan;
 	this.glutenFree = glutenFree;
 	this.citrusFree = citrusFree;
+	this.create = function(){
+		return $('<li>').text(this.name);
+	}
 	this.toString = function(){
 		return this.name +' '+  this.calories +' '+ this.vegan +' '+ this.glutenFree +' '+ this.citrusFree;
 	}
@@ -42,11 +45,17 @@ var Drink = function (name, description, price, ingredients){
 	}
 }
 
+var plates = [];
 var Plate = function (name, description, price, ingredients){
 	this.name = name;
 	this.description = description;
 	this.price = price;
 	this.ingredients = ingredients;
+	plates.push($('<li>').text(this.name));
+
+	// this.create = function(){
+	// 	return $('<li>').text(this.name);
+	// }
 	this.isVegan = function(ingredients){
 		for (var i=0; i<this.ingredients.length; i++){
 			if (!this.ingredients[i].vegan){
@@ -82,6 +91,9 @@ var Order = function (plates){
 
 var Menu = function (plates){
 	this.plates = plates;
+	this.create = function(){
+		return $('<ul id="menu">').html('<li><span>Drinks:</span><ul id="drinks"></ul></li><li><span>Plates:</span><ul id="plates"></ul></li>');
+	}
 	this.toString = function(){
 		return this.plates.join();
 	}
@@ -91,6 +103,9 @@ var Restaurant = function (name, description, menu){
 	this.name = name;
 	this.description = description;
 	this.menu = menu;
+	this.create = function(){
+		return $('<h1>').text(this.name);
+	}
 	this.toString = function(){
 		return console.log(this.name + ' ' + this.description + ' ' + this.menu);
 	}
@@ -136,3 +151,9 @@ var customer2 = new Customer ('vegan');
 console.log(egg.toString());
 console.log(apple.toString());
 console.log(hamburger.toString());
+
+$(function(){
+	$('body').append(restaurant1.create());
+	$('body').append(menu1.create());
+	// $('#plates').append(appleBurger.create());
+});
