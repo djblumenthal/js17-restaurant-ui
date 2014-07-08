@@ -20,10 +20,6 @@ var Drink = function (name, description, price, ingredients){
 	this.description = description;
 	this.price = price;
 	this.ingredients = ingredients;
-	drinks.push($('<li>').text(this.name));
-	this.toString = function(){
-		return this.name +' '+  this.description +' '+ this.price +' '+ this.ingredients.join(', ');
-	}
 	this.isVegan = function(ingredients){
 		for (var i=0; i<this.ingredients.length; i++){
 			if (!this.ingredients[i].vegan){
@@ -44,6 +40,14 @@ var Drink = function (name, description, price, ingredients){
 				return false;
 			}
 		}return true;
+	}
+	var thisDrink = $('<li data-price="'+this.price+'" data-vegan="'+this.isVegan()+'" data-glutenfree="'+this.isGlutenFree()+'" data-citrusfree="'+this.isCitrusFree()+'">').text(this.name).append($('<ul>'))
+	drinks.push(thisDrink);
+	for (var i=0; i<ingredients.length; i++) {
+		drinks[drinks.indexOf(thisDrink)].children('ul').append(ingredients[i].create());
+	}
+	this.toString = function(){
+		return this.name +' '+  this.description +' '+ this.price +' '+ this.ingredients.join(', ');
 	}
 }
 
@@ -53,9 +57,6 @@ var Plate = function (name, description, price, ingredients){
 	this.description = description;
 	this.price = price;
 	this.ingredients = ingredients;
-	plates.push($('<li>').text(this.name);
-
-
 	this.isVegan = function(ingredients){
 		for (var i=0; i<this.ingredients.length; i++){
 			if (!this.ingredients[i].vegan){
@@ -77,13 +78,22 @@ var Plate = function (name, description, price, ingredients){
 			}
 		}return true;
 	}
+	var thisPlate = $('<li data-price="'+this.price+'" data-vegan="'+this.isVegan()+'" data-glutenfree="'+this.isGlutenFree()+'" data-citrusfree="'+this.isCitrusFree()+'">').text(this.name).append($('<ul>'))
+	plates.push(thisPlate);
+	for (var i=0; i<ingredients.length; i++) {
+		plates[plates.indexOf(thisPlate)].children('ul').append(ingredients[i].create());
+	}
+
+
 	this.toString = function(){
 		return this.name +' '+  this.description +' '+ this.price +' '+ this.ingredients.join(', ');
 	}
 }
-
 var Order = function (plates){
 	this.plates = plates;
+	this.create = function() {
+		return $('<ul id="order">');
+	}
 	this.toString = function(){
 		return this.plates.join();
 	}
@@ -152,6 +162,7 @@ console.log(egg.toString());
 console.log(apple.toString());
 console.log(hamburger.toString());
 
+	var total = 0
 $(function(){
 	$('body').append(restaurant1.create());
 	$('body').append(menu1.create());
@@ -161,4 +172,43 @@ $(function(){
 	for (var i=0; i<drinks.length; i++){
 		$('#drinks').append(drinks[i]);
 	}
+	$('body').append($('<h2 id="myOrder">').text('My Order: $' + total));
+	$('body').append($('<label>').html('<input type="checkbox" id="vegan"> Vegan'));
+	$('body').append($('<label>').html('<input type="checkbox" id="gluten-free"> Gluten Free'));
+	$('body').append($('<label>').html('<input type="checkbox" id="citrus-free"> Citrus Free'));
+	$('body').append(order1.create());
+
+	$('#plates > li, #drinks > li').click(function () {
+		$('#order').append($(this).clone());
+		total += $(this).data('price');
+		$('#myOrder').text('My Order: $' + total);
+	});
+
+	$('#vegan').change(function() {
+		if ($(this).is(':checked')) {
+			$('[data-vegan="true"]').css('background', 'yellow');
+		}
+		else {
+			$('[data-vegan="true"]').css('background', 'white');
+		}
+	});
+
+	$('#gluten-free').change(function() {
+		if ($(this).is(':checked')) {
+			$('[data-glutenfree="true"]').css('background', 'yellow');
+		}
+		else {
+			$('[data-glutenfree="true"]').css('background', 'white');
+		}
+	});
+
+	$('#citrus-free').change(function() {
+		if ($(this).is(':checked')) {
+			$('[data-citrusfree="true"]').css('background', 'yellow');
+		}
+		else {
+			$('[data-citrusfree="true"]').css('background', 'white');
+		}
+	});
+
 });
