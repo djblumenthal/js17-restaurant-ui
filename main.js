@@ -14,11 +14,13 @@ var FoodItem = function (name, calories, vegan, glutenFree, citrusFree){
 	}
 };
 
+var drinks = [];
 var Drink = function (name, description, price, ingredients){
 	this.name = name;
 	this.description = description;
 	this.price = price;
 	this.ingredients = ingredients;
+	drinks.push($('<li>').text(this.name));
 	this.toString = function(){
 		return this.name +' '+  this.description +' '+ this.price +' '+ this.ingredients.join(', ');
 	}
@@ -51,11 +53,9 @@ var Plate = function (name, description, price, ingredients){
 	this.description = description;
 	this.price = price;
 	this.ingredients = ingredients;
-	plates.push($('<li>').text(this.name));
+	plates.push($('<li>').text(this.name);
 
-	// this.create = function(){
-	// 	return $('<li>').text(this.name);
-	// }
+
 	this.isVegan = function(ingredients){
 		for (var i=0; i<this.ingredients.length; i++){
 			if (!this.ingredients[i].vegan){
@@ -155,5 +155,10 @@ console.log(hamburger.toString());
 $(function(){
 	$('body').append(restaurant1.create());
 	$('body').append(menu1.create());
-	// $('#plates').append(appleBurger.create());
+	for (var i=0; i<plates.length; i++){
+		$('#plates').append(plates[i]);
+	}	
+	for (var i=0; i<drinks.length; i++){
+		$('#drinks').append(drinks[i]);
+	}
 });
